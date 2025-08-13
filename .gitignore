@@ -1,1 +1,3 @@
 *.xml
+data/processed/processed_papers.jsonl
+/venv
