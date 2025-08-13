@@ -1,5 +1,4 @@
 import xml.etree.ElementTree as ET
-import json
 import jsonlines
 
 #Extracting these data tags:
@@ -12,7 +11,7 @@ import jsonlines
 #Parse through XML, Loop Through Each Paper, Extract and Map Fields, Create Json Object, Write to Jsonl
 
 xml_files = ["AI_papers.xml", "CL_papers.xml", "CV_papers.xml", "IR_papers.xml", "LG_papers.xml"]
-data_tags = ["id", "published", "summary", "link"]
+data_tags = ["id", "published", "title", "summary", "link", "category"]
 
 namespace = '{http://www.w3.org/2005/Atom}'
 
@@ -32,6 +31,8 @@ def XML_json(xml_files, data_tags):
                 if (find_tags != None):
                     if (tags == 'link'):
                         dict[tags] = find_tags.attrib['href']
+                    elif (tags == 'category'):
+                        dict[tags] = find_tags.attrib['term']
                     else:
                         dict[tags] = find_tags.text
             #logic must be different as name is within author element
@@ -50,6 +51,6 @@ def XML_json(xml_files, data_tags):
 
 if __name__ == '__main__':
     XML_json(xml_files, data_tags)
-    with jsonlines.open('processed_papers.jsonl', 'w') as w:
+    with jsonlines.open('processed_papers_final.jsonl', 'w') as w:
         w.write_all(entire_data)
 
