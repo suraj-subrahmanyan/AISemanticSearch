@@ -40,21 +40,37 @@ def lemmatizer(text):
     return lemmatized_list
 
 if __name__ == '__main__':
-    final_list = []
+    final_nlp = []
     with jsonlines.open('processed_papers_final.jsonl', 'r') as reader:
-        line_count = 0
+        # line_count = 0
         for lines in reader:
-            s = lines["title"]
-            s = s.lower() #ex. Bob --> bob
-            s = contractions.fix(s) #ex. it's --> it is
-            s = removePunctuation(s) #ex. Hello: World --> Hello World
-            s = removeStopwords(s)
-            final_list.append(lemmatizer(s))
-            
-            with jsonlines.open('new_preprocessed_text.jsonl', 'w') as writer:
-                writer.write_all(final_list)
-            
+            temp_dict = {}
+
+            #Titles
+            t_nlp = lines['title']
+            t_nlp = t_nlp.lower() #ex. Bob --> bob
+            t_nlp = contractions.fix(t_nlp) #ex. it's --> it is
+            t_nlp = removePunctuation(t_nlp) #ex. Hello: World --> Hello World
+            t_nlp = removeStopwords(t_nlp)
+            temp_dict['title'] = lemmatizer(t_nlp)
+
+            #Summaries
+            s_nlp = lines['summary']
+            s_nlp = s_nlp.lower()
+            s_nlp = contractions.fix(s_nlp)
+            s_nlp = removePunctuation(s_nlp)
+            s_nlp = removeStopwords(s_nlp)
+            temp_dict['summary'] = lemmatizer(s_nlp)
+
+            final_nlp.append(temp_dict)
+
             #Testing
-            # if (line_count >= 200):
+            # if (line_count >= 50):
             #     break
             # line_count += 1
+    
+    print(final_nlp)
+                
+    with jsonlines.open('nlp_text.jsonl', 'w') as writer:
+        writer.write_all(final_nlp)
+                
