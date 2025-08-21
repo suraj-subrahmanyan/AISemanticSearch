@@ -40,6 +40,7 @@ def lemmatizer(text):
     return lemmatized_list
 
 if __name__ == '__main__':
+    final_list = []
     with jsonlines.open('processed_papers_final.jsonl', 'r') as reader:
         line_count = 0
         for lines in reader:
@@ -48,10 +49,11 @@ if __name__ == '__main__':
             s = contractions.fix(s) #ex. it's --> it is
             s = removePunctuation(s) #ex. Hello: World --> Hello World
             s = removeStopwords(s)
-            s = lemmatizer(s)
-            print(s)
+            final_list.append(lemmatizer(s))
             
-
+            with jsonlines.open('new_preprocessed_text.jsonl', 'w') as writer:
+                writer.write_all(final_list)
+            
             #Testing
             # if (line_count >= 200):
             #     break
