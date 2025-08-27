@@ -1,11 +1,12 @@
 import json
 import jsonlines
 
+from config import hostName, nameIndex
 from elasticsearch import Elasticsearch #downgraded version 8.11.0 to match server
 from elasticsearch import helpers
 
-client = Elasticsearch("http://localhost:9200")
-nameIndex = 'sparse_index'
+client = Elasticsearch(hostName)
+
 def createEmptyIndex():
     try:
         with open('mapping.json', 'r') as reader:
