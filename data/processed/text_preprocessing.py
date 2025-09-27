@@ -31,7 +31,7 @@ def removeStopwords(text):
             noStopwords.append(words)
 
     text = " ".join(noStopwords) #join them back to be tokenized with spacy
-    return text    
+    return text 
 
 def lemmatizer(text):
     lemmatized_list = []
@@ -41,6 +41,7 @@ def lemmatizer(text):
     return lemmatized_list
 
 if __name__ == '__main__':
+    # sparse retrieval
     with jsonlines.open('processed_papers_final.jsonl', 'r') as reader:
         with jsonlines.open('nlp_text.jsonl', 'w') as writer:
             # line_count = 0
@@ -69,7 +70,20 @@ if __name__ == '__main__':
                 writer.write(temp_dict)
                 print("line complete")
 
-                #Testing
+                # Testing
                 # if (line_count >= 50):
                 #     break
-                # line_count += 1                
+                # line_count += 1
+
+    #dense retrieval 
+    with jsonlines.open('processed_papers_final.jsonl', 'r') as reader:
+        with jsonlines.open('dense_text.jsonl', 'w') as writer:
+            for lines in reader:
+                temp_dict = {}
+
+                temp_dict['id'] = lines['id']
+                temp_dict['title'] = removePunctuation(lines['title'])
+                temp_dict['summary'] = removePunctuation(lines['summary'])
+
+                writer.write(temp_dict)
+                print("Line complete")
